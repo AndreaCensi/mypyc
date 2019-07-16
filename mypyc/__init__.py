@@ -16,5 +16,7 @@ sys.path.insert(0, mypy_path)
 # mypy was imported before mypyc was, our path manipulations might
 # have been too late, and this assert will catch the problem.
 import mypy
-assert mypy.__file__ == os.path.join(mypy_path, 'mypy', '__init__.py'), (
-    "Found a mypy other than the one packaged with mypyc!")
+
+found = mypy.__file__
+expect = os.path.join(mypy_path, 'mypy', '__init__.py'),
+assert found ==  expect, f"Found a mypy at {found!r} rather than at {expect!r}"
