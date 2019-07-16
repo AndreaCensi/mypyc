@@ -6,8 +6,11 @@ import os.path
 # installed mypy). In order to make sure we find it, we perform
 # sys.path shenanigans here when mypyc is first imported.
 base_path = os.path.dirname(__file__)
-mypy_path = os.path.abspath(os.path.join(base_path, 'external', 'mypy'))
+mypy_path = os.path.abspath(os.path.join(base_path,'..',  'external', 'mypy'))
 sys.path.insert(0, mypy_path)
+
+# print(__file__)
+# print(sys.path[0])
 
 # Make sure that we can find mypy and that it is the *right* mypy.  If
 # mypy was imported before mypyc was, our path manipulations might

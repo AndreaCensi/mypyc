@@ -81,7 +81,7 @@ def is_maybe_undefined(post_must_defined: Set[Value], src: Value) -> bool:
 
 
 def maybe_append_dec_ref(ops: List[Op], dest: Value,
-                         defined: AnalysisDict[Value], key: Tuple[BasicBlock, int]) -> None:
+                         defined: AnalysisDict, key: Tuple[BasicBlock, int]) -> None:
     if dest.type.is_refcounted:
         ops.append(DecRef(dest, is_xdec=is_maybe_undefined(defined[key], dest)))
 
@@ -92,10 +92,10 @@ def maybe_append_inc_ref(ops: List[Op], dest: Value) -> None:
 
 
 def transform_block(block: BasicBlock,
-                    pre_live: AnalysisDict[Value],
-                    post_live: AnalysisDict[Value],
-                    pre_borrow: AnalysisDict[Value],
-                    post_must_defined: AnalysisDict[Value],
+                    pre_live: AnalysisDict,
+                    post_live: AnalysisDict,
+                    pre_borrow: AnalysisDict,
+                    post_must_defined: AnalysisDict,
                     env: Environment) -> None:
     old_ops = block.ops
     ops = []  # type: List[Op]
@@ -140,10 +140,10 @@ def insert_branch_inc_and_decrefs(
         block: BasicBlock,
         cache: BlockCache,
         blocks: List[BasicBlock],
-        pre_live: AnalysisDict[Value],
-        pre_borrow: AnalysisDict[Value],
-        post_borrow: AnalysisDict[Value],
-        post_must_defined: AnalysisDict[Value],
+        pre_live: AnalysisDict,
+        pre_borrow: AnalysisDict,
+        post_borrow: AnalysisDict,
+        post_must_defined: AnalysisDict,
         env: Environment) -> None:
     """Insert inc_refs and/or dec_refs after a branch/goto.
 
@@ -197,7 +197,7 @@ def insert_branch_inc_and_decrefs(
 
 
 def after_branch_decrefs(label: BasicBlock,
-                         pre_live: AnalysisDict[Value],
+                         pre_live: AnalysisDict,
                          source_defined: Set[Value],
                          source_borrowed: Set[Value],
                          source_live_regs: Set[Value],
@@ -213,8 +213,8 @@ def after_branch_decrefs(label: BasicBlock,
 
 
 def after_branch_increfs(label: BasicBlock,
-                         pre_live: AnalysisDict[Value],
-                         pre_borrow: AnalysisDict[Value],
+                         pre_live: AnalysisDict,
+                         pre_borrow: AnalysisDict,
                          source_borrowed: Set[Value],
                          env: Environment) -> Tuple[Value, ...]:
     target_pre_live = pre_live[label, 0]
