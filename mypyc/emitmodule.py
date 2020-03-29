@@ -7,6 +7,7 @@ from typing import List, Tuple, Dict, Iterable, Set, TypeVar, Optional
 
 from mypy.build import BuildSource, BuildResult, build
 from mypy.errors import CompileError
+from mypy.fscache import FileSystemCache
 from mypy.options import Options
 
 from mypyc import genops
@@ -36,10 +37,14 @@ class MarkedDeclaration:
 def parse_and_typecheck(sources: List[BuildSource], options: Options,
                         alt_lib_path: Optional[str] = None) -> BuildResult:
     assert options.strict_optional, 'strict_optional must be turned on'
+    fs = FileSystemCache()
     result = build(sources=sources,
                    options=options,
+                   fscache=fs,
                    alt_lib_path=alt_lib_path)
     if result.errors:
+        print(f'options: {options}')
+        print(f'sources: {sources}')
         raise CompileError(result.errors)
     return result
 
